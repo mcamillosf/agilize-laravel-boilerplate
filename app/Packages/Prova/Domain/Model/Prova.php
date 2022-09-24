@@ -19,8 +19,7 @@ class Prova
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\Column(type="uuid")
      */
     public string $id;
 
@@ -35,7 +34,6 @@ class Prova
     public int $qtdPerguntas;
 
     /**
-     * @var Collection $perguntas
      * @ORM\ManyToMany(
      *     targetEntity="\App\Packages\Prova\Domain\Model\Pergunta",
      *     cascade={"all"},
@@ -60,24 +58,18 @@ class Prova
      *     inversedBy="prova",
      *     cascade={"persist"}
      * )
+     * @ORM\JoinColumn(name="materia_id")
      */
     protected Materia $materia;
 
-    /**
-     * @param string $status
-     * @param int $qtdPerguntas
-     * @param Collection $perguntas
-     * @param User $user
-     * @param Materia $materia
-     */
-    public function __construct(string $status, int $qtdPerguntas, Collection $perguntas, User $user, Materia $materia)
+    public function __construct(string $status = '', ?int $qtdPerguntas = 10, User $user, Materia $materia)
     {
         $this->id = Str::uuid()->toString();
+        $this->materia = $materia;
         $this->status = $status;
         $this->qtdPerguntas = $qtdPerguntas;
-        $this->perguntas = $perguntas;
+        $this->perguntas = new ArrayCollection();
         $this->user = $user;
-        $this->materia = $materia;
     }
 
 
@@ -90,11 +82,11 @@ class Prova
     }
 
     /**
-     * @param Collection $perguntas
+     * @param \Illuminate\Support\Collection $perguntas
      */
-    public function setPerguntas(Collection $perguntas): void
+    public function addPerguntas(\Illuminate\Support\Collection $perguntas): void
     {
-        $this->perguntas = $perguntas;
+        $this->perguntas->add($perguntas);
     }
 
     /**
@@ -154,4 +146,21 @@ class Prova
     {
         $this->qtdPerguntas = $qtdPerguntas;
     }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
 }

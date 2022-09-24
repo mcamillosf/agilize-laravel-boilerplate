@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Illuminate\Support\Str;
+use function Sodium\add;
 
 /**
  * @ORM\Entity
@@ -18,8 +19,7 @@ class Pergunta
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\Column(type="uuid")
      */
     private string $id;
 
@@ -34,7 +34,8 @@ class Pergunta
      * @ORM\OneToMany(
      *     targetEntity="\App\Packages\Prova\Domain\Model\Resposta",
      *     mappedBy="pergunta",
-     *     cascade={"persist"}
+     *     cascade={"all"},
+     *     fetch="EXTRA_LAZY"
      * )
      */
     protected Collection $resposta;
@@ -42,23 +43,48 @@ class Pergunta
     /**
      * @ORM\ManyToMany(
      *     targetEntity="\App\Packages\Prova\Domain\Model\Prova",
-     *     inversedBy="pergunta",
+     *     inversedBy="prova",
      *     cascade={"persist"}
      * )
      */
-    protected Prova $prova;
+    protected Collection $prova;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Materia",
+     *     inversedBy="pergunta",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(name="materia_id")
+     */
+    private Materia $materia;
 
     /**
      * @param string $pergunta
-     * @param Resposta $resposta
-     * @param Prova $prova
+     * @param Materia $materia
      */
-    public function __construct(string $pergunta, Resposta $resposta, Prova $prova)
+    public function __construct(string $pergunta, Materia $materia)
     {
         $this->id = Str::uuid()->toString();
         $this->pergunta = $pergunta;
+        $this->materia = $materia;
         $this->resposta = new ArrayCollection();
-        $this->prova = $prova;
+    }
+
+    /**
+     * @return Materia
+     */
+    public function getMateria(): Materia
+    {
+        return $this->materia;
+    }
+
+    /**
+     * @param Materia $materia
+     */
+    public function setMateria(Materia $materia): void
+    {
+        $this->materia = $materia;
     }
 
     /**
@@ -70,11 +96,11 @@ class Pergunta
     }
 
     /**
-     * @param Collection $resposta
+     * @param Resposta $resposta
      */
-    public function setResposta(Collection $resposta): void
+    public function addResposta(Resposta $resposta): void
     {
-        $this->resposta = $resposta;
+        $this->resposta->add($resposta);
     }
 
     /**
@@ -102,18 +128,23 @@ class Pergunta
     }
 
     /**
-     * @return Prova
+     * @return Collection
      */
-    public function getProva(): Prova
+    public function getProva(): Collection
     {
         return $this->prova;
     }
 
     /**
-     * @param Prova $prova
+     * @param Collection $prova
      */
-    public function setProva(Prova $prova): void
+    public function setProva(Collection $prova): void
     {
         $this->prova = $prova;
+    }
+
+    public function adicionaRespostaAPergunta(Resposta $resposta)
+    {
+
     }
 }

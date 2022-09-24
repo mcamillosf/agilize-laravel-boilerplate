@@ -1,5 +1,8 @@
 <?php
 
+use App\Packages\Doctrine\Limit;
+use App\Packages\Doctrine\Random;
+
 return [
 
     /*
@@ -37,7 +40,7 @@ return [
             'proxies'       => [
                 'namespace'     => false,
                 'path'          => storage_path('proxies'),
-                'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
+                'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', true)
             ],
             /*
             |--------------------------------------------------------------------------
@@ -128,7 +131,10 @@ return [
     | DQL custom numeric functions
     |--------------------------------------------------------------------------
     */
-    'custom_numeric_functions'   => [],
+    'custom_numeric_functions'   => [
+        'RANDOM' => Random::class,
+        'LIMIT_RESULT' => Limit::class
+    ],
     /*
     |--------------------------------------------------------------------------
     | DQL custom string functions

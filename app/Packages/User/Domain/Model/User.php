@@ -3,6 +3,7 @@
 namespace App\Packages\User\Domain\Model;
 
 use App\Packages\Prova\Domain\Model\Prova;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Illuminate\Support\Str;
@@ -17,8 +18,7 @@ class User
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\Column(type="uuid")
      */
     public string $id;
 
@@ -35,35 +35,32 @@ class User
      *     fetch="EXTRA_LAZY"
      * )
      */
-    protected Prova $prova;
+    protected Collection $prova;
 
     /**
      * @param string $nome
-     * @param Prova $prova
      */
-    public function __construct(string $nome, Prova $prova)
+    public function __construct(string $nome = '')
     {
         $this->id = Str::uuid()->toString();
         $this->nome = $nome;
-        $this->prova = $prova;
     }
 
     /**
-     * @return Prova
+     * @return Collection
      */
-    public function getProva(): Prova
+    public function getProva(): Collection
     {
         return $this->prova;
     }
 
     /**
-     * @param Prova $prova
+     * @param Collection $prova
      */
-    public function setProva(Prova $prova): void
+    public function setProva(Collection $prova): void
     {
         $this->prova = $prova;
     }
-
 
     /**
      * @return string

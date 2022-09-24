@@ -16,7 +16,6 @@ class Resposta
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="uuid", unique=true)
      */
     public string $id;
@@ -37,6 +36,7 @@ class Resposta
      *     inversedBy="resposta",
      *     cascade={"persist"}
      * )
+     * @ORM\JoinColumn(name="pergunta_id")
      */
     protected Pergunta $pergunta;
 

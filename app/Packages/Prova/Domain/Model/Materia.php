@@ -2,6 +2,8 @@
 
 namespace App\Packages\Prova\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -17,7 +19,6 @@ class Materia
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
      * @ORM\Column(type="uuid", unique=true)
      */
     public string $id;
@@ -30,21 +31,31 @@ class Materia
     /**
      * @ORM\OneToMany(
      *    targetEntity="\App\Packages\Prova\Domain\Model\Prova",
+     *    cascade={"all"},
      *    mappedBy="materia",
-     *    cascade={"persist"}
+     *    fetch="EXTRA_LAZY"
      * )
      */
-    protected Prova $prova;
+    protected Collection $prova;
+
+    /**
+     * @var Collection $pergunta
+     * @ORM\OneToMany(
+     *   targetEntity="Pergunta",
+     *   cascade={"persist"},
+     *   mappedBy="materia",
+     *   fetch="EXTRA_LAZY"
+     * )
+     */
+    private Collection $pergunta;
 
     /**
      * @param string $materia
-     * @param Prova $prova
      */
-    public function __construct(string $materia, Prova $prova)
+    public function __construct(string $materia = '')
     {
         $this->id = Str::uuid()->toString();
         $this->materia = $materia;
-        $this->prova = $prova;
     }
 
     /**
@@ -72,9 +83,9 @@ class Materia
     }
 
     /**
-     * @return Prova
+     * @return Collection
      */
-    public function getProva(): Prova
+    public function getProva(): Collection
     {
         return $this->prova;
     }
@@ -82,8 +93,24 @@ class Materia
     /**
      * @param Prova $prova
      */
-    public function setProva(Prova $prova): void
+    public function setProva(Collection $prova): void
     {
         $this->prova = $prova;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPergunta(): Collection
+    {
+        return $this->pergunta;
+    }
+
+    /**
+     * @param Collection $pergunta
+     */
+    public function setPergunta(Collection $pergunta): void
+    {
+        $this->pergunta = $pergunta;
     }
 }
