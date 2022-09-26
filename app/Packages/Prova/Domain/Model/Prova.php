@@ -3,10 +3,13 @@
 namespace App\Packages\Prova\Domain\Model;
 
 use App\Packages\User\Domain\Model\User;
+use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 /**
@@ -34,7 +37,18 @@ class Prova
     public int $qtdPerguntas;
 
     /**
-     * @ORM\ManyToMany(
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $inicio;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $fim;
+
+    /**
+     * @ORM\OneToMany(
      *     targetEntity="\App\Packages\Prova\Domain\Model\Pergunta",
      *     cascade={"all"},
      *     mappedBy="prova",
@@ -70,6 +84,8 @@ class Prova
         $this->qtdPerguntas = $qtdPerguntas;
         $this->perguntas = new ArrayCollection();
         $this->user = $user;
+        $this->inicio = Carbon::now('America/Sao_Paulo');
+        $this->fim = null;
     }
 
 
@@ -81,12 +97,11 @@ class Prova
         return $this->perguntas;
     }
 
-    /**
-     * @param \Illuminate\Support\Collection $perguntas
-     */
-    public function addPerguntas(\Illuminate\Support\Collection $perguntas): void
+    public function addPerguntas($perguntas): void
     {
-        $this->perguntas->add($perguntas);
+        foreach ($perguntas as $pergunta) {
+            $this->perguntas->add($pergunta);
+        }
     }
 
     /**
@@ -161,6 +176,38 @@ class Prova
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInicio()
+    {
+        return $this->inicio;
+    }
+
+    /**
+     * @param mixed $inicio
+     */
+    public function setInicio($inicio): void
+    {
+        $this->inicio = $inicio;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getFim(): DateTime
+    {
+        return $this->fim;
+    }
+
+    /**
+     * @param DateTime $fim
+     */
+    public function setFim(DateTime $fim): void
+    {
+        $this->fim = $fim;
     }
 
 }

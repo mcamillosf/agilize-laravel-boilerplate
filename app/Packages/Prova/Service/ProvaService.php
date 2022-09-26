@@ -10,6 +10,7 @@ use App\Packages\Prova\Domain\Repository\PerguntaRepository;
 use App\Packages\Prova\Domain\Repository\ProvaRepository;
 use App\Packages\Prova\Domain\Repository\RespostaRepository;
 use App\Packages\User\Facade\UserFacade;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class ProvaService
 {
@@ -45,15 +46,15 @@ class ProvaService
         $qtdPerguntas = rand($min = 1, $max = 10);
         $perguntas = $this->perguntaRepository->getPerguntasAleatorias($qtdPerguntas, $materiaId);
         /** @var Pergunta $pergunta */
-        $perguntasCollection = collect();
+        $perguntasCollection = new ArrayCollection();
         foreach ($perguntas as $pergunta) {
             $perguntasCollection->add([
                'pergunta' => $pergunta->getPergunta(),
                'respostas' => $pergunta->getResposta()->toArray()
             ]);
         }
-        $status = 'Aberta';;
-        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $userId, $materiaId, $perguntasCollection);
+        $status = 'Aberta';
+        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $userId, $materiaId, $perguntas);
 
         return $prova;
     }

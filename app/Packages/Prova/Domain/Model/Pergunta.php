@@ -41,13 +41,13 @@ class Pergunta
     protected Collection $resposta;
 
     /**
-     * @ORM\ManyToMany(
+     * @ORM\ManyToOne(
      *     targetEntity="\App\Packages\Prova\Domain\Model\Prova",
      *     inversedBy="prova",
      *     cascade={"persist"}
      * )
      */
-    protected Collection $prova;
+    protected Prova $prova;
 
     /**
      * @ORM\ManyToOne(
@@ -128,17 +128,17 @@ class Pergunta
     }
 
     /**
-     * @return Collection
+     * @return Prova
      */
-    public function getProva(): Collection
+    public function getProva(): Prova
     {
         return $this->prova;
     }
 
     /**
-     * @param Collection $prova
+     * @param Prova $prova
      */
-    public function setProva(Collection $prova): void
+    public function setProva(Prova $prova): void
     {
         $this->prova = $prova;
     }

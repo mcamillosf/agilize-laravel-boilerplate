@@ -5,8 +5,11 @@ namespace App\Packages\Prova\Domain\Repository;
 
 use App\Packages\Base\Repository;
 use App\Packages\Prova\Domain\Model\Materia;
+use App\Packages\Prova\Domain\Model\Pergunta;
 use App\Packages\Prova\Domain\Model\Prova;
 use App\Packages\User\Domain\Model\User;
+use Carbon\Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class ProvaRepository extends Repository
@@ -95,10 +98,10 @@ class ProvaRepository extends Repository
         /**
          * @var Materia $materia */
         $materia = EntityManager::getRepository(Materia::class)->findOneBy(['id' => $materiaId]);
-        $prova = new Prova($status, $qtdPerguntas, $user, $materia);
+        $inicio = Carbon::now();
+        $prova = new Prova($status, $qtdPerguntas, $user, $materia, $inicio);
+        $this->add($prova);
         $prova->addPerguntas($perguntas);
-//        dd($prova->getPerguntas()->toArray());
-//        $this->add($prova);
         return $prova;
     }
 
