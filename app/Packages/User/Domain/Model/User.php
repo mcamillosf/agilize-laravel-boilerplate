@@ -38,6 +38,16 @@ class User
     protected Collection $prova;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="\App\Packages\Prova\Domain\Model\ProvaSnapshot",
+     *     cascade={"all"},
+     *     mappedBy="user",
+     *     fetch="EXTRA_LAZY"
+     * )
+     */
+    protected Collection $prova_snapshot;
+
+    /**
      * @param string $nome
      */
     public function __construct(string $nome = '')
@@ -84,6 +94,22 @@ class User
     public function setNome(string $nome): void
     {
         $this->nome = $nome;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getProvaSnapshot(): Collection
+    {
+        return $this->prova_snapshot;
+    }
+
+    /**
+     * @param Collection $prova_snapshot
+     */
+    public function setProvaSnapshot(Collection $prova_snapshot): void
+    {
+        $this->prova_snapshot = $prova_snapshot;
     }
 
 }

@@ -5,7 +5,9 @@ namespace App\Packages\Prova\Facade;
 
 use App\Packages\Prova\Domain\Model\Materia;
 use App\Packages\Prova\Domain\Model\Prova;
+use App\Packages\Prova\Domain\Model\ProvaSnapshot;
 use App\Packages\Prova\Domain\Model\Resposta;
+use App\Packages\Prova\Domain\Repository\ProvaSnapshotRepository;
 use App\Packages\Prova\Service\MateriaService;
 use App\Packages\Prova\Service\PerguntaService;
 use App\Packages\Prova\Service\ProvaService;

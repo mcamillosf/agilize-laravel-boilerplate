@@ -16,11 +16,7 @@ class ProvaRepository extends Repository
 {
     protected string $entityName = Prova::class;
 
-    /**
-     * @param $id
-     * @return float|int|mixed|string
-     */
-    public function getProvaById($id): mixed
+    public function getProvaById($id)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder
@@ -45,11 +41,7 @@ class ProvaRepository extends Repository
             ->getResult();
     }
 
-    /**
-     * @param $materia
-     * @return float|int|mixed|string
-     */
-    public function getProvasByMateria($materia): mixed
+    public function getProvasByMateria($materia)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder
@@ -62,11 +54,7 @@ class ProvaRepository extends Repository
             ->getResult();
     }
 
-    /**
-     * @param $name
-     * @return float|int|mixed|string
-     */
-    public function getProvaAndMateriaByUserName($name): mixed
+    public function getProvaAndMateriaByUserName($name)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder
@@ -90,11 +78,8 @@ class ProvaRepository extends Repository
             ->getResult();
     }
 
-    public function createProva($status, $qtdPerguntas, $userId, $materiaId, $perguntas)
+    public function createProva($status, $qtdPerguntas, $user, $materiaId, $perguntas)
     {
-        /**
-         * @var User $user */
-        $user = EntityManager::getRepository(User::class)->findOneBy(['id' => $userId]);
         /**
          * @var Materia $materia */
         $materia = EntityManager::getRepository(Materia::class)->findOneBy(['id' => $materiaId]);

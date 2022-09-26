@@ -76,6 +76,14 @@ class Prova
      */
     protected Materia $materia;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="ProvaSnapshot",
+     *     mappedBy="prova",
+     * )
+     */
+    public ProvaSnapshot $snapshot;
+
     public function __construct(string $status = '', ?int $qtdPerguntas = 10, User $user, Materia $materia)
     {
         $this->id = Str::uuid()->toString();
@@ -87,7 +95,6 @@ class Prova
         $this->inicio = Carbon::now('America/Sao_Paulo');
         $this->fim = null;
     }
-
 
     /**
      * @return Collection
@@ -210,4 +217,19 @@ class Prova
         $this->fim = $fim;
     }
 
+    /**
+     * @return ProvaSnapshot
+     */
+    public function getSnapshot(): ProvaSnapshot
+    {
+        return $this->snapshot;
+    }
+
+    /**
+     * @param ProvaSnapshot $snapshot
+     */
+    public function setSnapshot(ProvaSnapshot $snapshot): void
+    {
+        $this->snapshot = $snapshot;
+    }
 }

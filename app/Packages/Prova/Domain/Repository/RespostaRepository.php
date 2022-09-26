@@ -24,6 +24,21 @@ class RespostaRepository extends Repository
             ->getResult();
     }
 
+    public function getRespostaCorretaByPerguntaId($id, $correta = true)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->select('resposta.resposta')
+            ->from($this->entityName, 'resposta')
+            ->join('resposta.pergunta', 'pergunta')
+            ->where('resposta.respostaCorreta = :correta')
+            ->andWhere('pergunta.id = :id')
+            ->setParameter('id', $id)
+            ->setParameter('correta', $correta)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @param $respostaId
      * @return float|int|mixed|string|null
