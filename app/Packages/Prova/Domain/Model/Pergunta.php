@@ -28,7 +28,6 @@ class Pergunta
      */
     private string $pergunta;
 
-
     /**
      * @var Collection $resposta
      * @ORM\OneToMany(
@@ -39,15 +38,6 @@ class Pergunta
      * )
      */
     protected Collection $resposta;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="\App\Packages\Prova\Domain\Model\Prova",
-     *     inversedBy="prova",
-     *     cascade={"persist"}
-     * )
-     */
-    protected Prova $prova;
 
     /**
      * @ORM\ManyToOne(
@@ -125,22 +115,6 @@ class Pergunta
     public function setPergunta(string $pergunta): void
     {
         $this->pergunta = $pergunta;
-    }
-
-    /**
-     * @return Prova
-     */
-    public function getProva(): Prova
-    {
-        return $this->prova;
-    }
-
-    /**
-     * @param Prova $prova
-     */
-    public function setProva(Prova $prova): void
-    {
-        $this->prova = $prova;
     }
 
     public function adicionaRespostaAPergunta(Resposta $resposta)

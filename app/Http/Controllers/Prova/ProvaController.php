@@ -8,6 +8,7 @@ use App\Packages\Prova\Facade\ProvaFacade;
 use Doctrine\Common\Collections\ArrayCollection;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class ProvaController extends Controller
@@ -23,24 +24,8 @@ class ProvaController extends Controller
     {
         try {
         $prova = $this->provaFacade->createProva($request);
-        $perguntas = $prova->getPerguntas()->map(function ($perguntas) {
-        $perguntasCollection = collect();
-            $perguntasCollection->add([
-                'pergunta' => $perguntas->getPergunta(),
-                'resposta' => $perguntas->getResposta()->toArray(),
-            ]);
-            return $perguntasCollection;
-        })->toArray();
-        $provaCollection = collect();
-        $provaCollection->add([
-            'prova_id' => $prova->getId(),
-            'aluno' => $prova->getUser()->getNome(),
-            'materia_prova' => $prova->getMateria()->getMateria(),
-            'quantidade_perguntas' => $prova->getQtdPerguntas(),
-            'perguntas' => $perguntas
-        ]);
             EntityManager::flush();
-            return response()->json($provaCollection[0]);
+            return response()->json([$prova], 201);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()
@@ -60,8 +45,6 @@ class ProvaController extends Controller
                     'prova_id' => $prova->getId(),
                     'aluno' => $prova->getUser()->getNome(),
                     'materia' => $prova->getMateria()->getMateria(),
-                    'quantidade_perguntas' => $prova->getPerguntas(),
-                    'perguntas' => $prova->getPerguntas()->toArray()
                 ]);
             }
             return response()->json($provasCollection->toArray());
@@ -70,5 +53,48 @@ class ProvaController extends Controller
                 'message' => $exception->getMessage()
             ], 400);
         }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+        $id = $request->route('id');
+        $provaFinalizada = $this->provaFacade->finalizarProva($request->toArray(), $id);
+        $provaResultado = $this->getResultadoProva($provaFinalizada);
+        return response()->json($provaResultado[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * @param mixed $provaFinalizada
+     * @return Collection
+     */
+    public function getResultadoProva(mixed $provaFinalizada): Collection
+    {
+        $perguntas = $provaFinalizada->getSnapshot()->toArray();
+        $perguntasCollection = collect();
+        foreach ($perguntas as $pergunta) {
+            $perguntasCollection->add([
+                'pergunta' => $pergunta->getPergunta(),
+                'alternativa_correta' => $pergunta->getRespostaCorreta(),
+                'alternativa_marcada' => $pergunta->getRespostaMarcada(),
+            ]);
+        }
+        $provaCollection = collect();
+        /** @var Prova $prova */
+        $provaCollection->add([
+            'prova_id' => $provaFinalizada->getId(),
+            'aluno' => $provaFinalizada->getUser()->getNome(),
+            'prova_status' => $provaFinalizada->getStatus(),
+            'materia_prova' => $provaFinalizada->getMateria()->getMateria(),
+            'quantidade_perguntas' => $provaFinalizada->getQtdPerguntas(),
+            'nota_prova' => $provaFinalizada->getNotaProva(),
+            'gabarito' => $perguntasCollection->toArray()
+        ]);
+        return $provaCollection;
     }
 }

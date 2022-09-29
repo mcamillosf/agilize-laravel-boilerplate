@@ -96,6 +96,11 @@ class ProvaFacade
         return $this->provaService->createProva($request);
     }
 
+    public function finalizarProva($body, $id)
+    {
+        return $this->provaService->updateProva($body, $id);
+    }
+
     public function getProvas()
     {
         return $this->provaService->getProvas();

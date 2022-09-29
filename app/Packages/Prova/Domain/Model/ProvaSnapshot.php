@@ -63,18 +63,13 @@ class ProvaSnapshot
      */
     protected $fim;
 
-    /**
-     * @param string $pergunta
-     * @param string $resposta_correta
-     * @param Prova $prova
-     */
-    public function __construct(string $pergunta, string $resposta_correta, Prova $prova)
+    public function __construct(Prova $prova, string $pergunta, string $resposta_correta)
     {
         $this->id = Str::uuid()->toString();
         $this->pergunta = $pergunta;
         $this->resposta_correta = $resposta_correta;
         $this->prova = $prova;
-        $this->inicio = Carbon::now('America/Sao_Paulo');
+        $this->inicio = Carbon::now();
         $this->fim = null;
     }
 

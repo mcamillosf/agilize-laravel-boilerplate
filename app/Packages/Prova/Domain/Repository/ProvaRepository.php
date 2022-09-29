@@ -7,6 +7,7 @@ use App\Packages\Base\Repository;
 use App\Packages\Prova\Domain\Model\Materia;
 use App\Packages\Prova\Domain\Model\Pergunta;
 use App\Packages\Prova\Domain\Model\Prova;
+use App\Packages\Prova\Domain\Model\ProvaSnapshot;
 use App\Packages\User\Domain\Model\User;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,14 +19,38 @@ class ProvaRepository extends Repository
 
     public function getProvaById($id)
     {
-        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         return $queryBuilder
             ->select('prova')
             ->from($this->entityName, 'prova')
             ->where('prova.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
+    }
+
+    public function getDataInicioProvaByProvaId($provaId)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->select('prova.inicio')
+            ->from($this->entityName, 'prova')
+            ->where('prova.id = :id')
+            ->setParameter('id', $provaId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getQuantidadeDePerguntasByProvaId($id)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->select('prova.qtdPerguntas')
+            ->from($this->entityName, 'prova')
+            ->where('prova.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function getProvasByUserName($name)
@@ -78,7 +103,7 @@ class ProvaRepository extends Repository
             ->getResult();
     }
 
-    public function createProva($status, $qtdPerguntas, $user, $materiaId, $perguntas)
+    public function createProva($status, $qtdPerguntas, $user, $materiaId)
     {
         /**
          * @var Materia $materia */
@@ -86,8 +111,27 @@ class ProvaRepository extends Repository
         $inicio = Carbon::now();
         $prova = new Prova($status, $qtdPerguntas, $user, $materia, $inicio);
         $this->add($prova);
-        $prova->addPerguntas($perguntas);
         return $prova;
+    }
+
+    public function updateProva($status, $id, $nota_prova)
+    {
+        $fim = Carbon::now('America/Sao_Paulo')->toDate();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->update($this->entityName, 'prova')
+            ->set('prova.fim', ':fim')
+            ->set('prova.status', ':status')
+            ->set('prova.notaProva', ':nota_prova')
+            ->where('prova.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'status' => $status,
+                'fim' => $fim,
+                'nota_prova' => $nota_prova
+            ])
+            ->getQuery()
+            ->execute();
     }
 
 }

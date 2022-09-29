@@ -37,6 +37,11 @@ class Prova
     public int $qtdPerguntas;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    public float $notaProva;
+
+    /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
@@ -46,16 +51,6 @@ class Prova
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $fim;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="\App\Packages\Prova\Domain\Model\Pergunta",
-     *     cascade={"all"},
-     *     mappedBy="prova",
-     *     fetch="EXTRA_LAZY"
-     * )
-     */
-    protected Collection $perguntas;
 
     /**
      * @ORM\ManyToOne(
@@ -82,7 +77,7 @@ class Prova
      *     mappedBy="prova",
      * )
      */
-    public ProvaSnapshot $snapshot;
+    public Collection $snapshot;
 
     public function __construct(string $status = '', ?int $qtdPerguntas = 10, User $user, Materia $materia)
     {
@@ -90,25 +85,10 @@ class Prova
         $this->materia = $materia;
         $this->status = $status;
         $this->qtdPerguntas = $qtdPerguntas;
-        $this->perguntas = new ArrayCollection();
         $this->user = $user;
-        $this->inicio = Carbon::now('America/Sao_Paulo');
+        $this->snapshot = new ArrayCollection();
+        $this->inicio = Carbon::now();
         $this->fim = null;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getPerguntas(): Collection
-    {
-        return $this->perguntas;
-    }
-
-    public function addPerguntas($perguntas): void
-    {
-        foreach ($perguntas as $pergunta) {
-            $this->perguntas->add($pergunta);
-        }
     }
 
     /**
@@ -170,6 +150,22 @@ class Prova
     }
 
     /**
+     * @return float
+     */
+    public function getNotaProva(): float
+    {
+        return $this->notaProva;
+    }
+
+    /**
+     * @param float $notaProva
+     */
+    public function setNotaProva(float $notaProva): void
+    {
+        $this->notaProva = $notaProva;
+    }
+
+    /**
      * @return User
      */
     public function getUser(): User
@@ -218,17 +214,17 @@ class Prova
     }
 
     /**
-     * @return ProvaSnapshot
+     * @return Collection
      */
-    public function getSnapshot(): ProvaSnapshot
+    public function getSnapshot(): Collection
     {
         return $this->snapshot;
     }
 
     /**
-     * @param ProvaSnapshot $snapshot
+     * @param Collection $snapshot
      */
-    public function setSnapshot(ProvaSnapshot $snapshot): void
+    public function setSnapshot(Collection $snapshot): void
     {
         $this->snapshot = $snapshot;
     }

@@ -13,6 +13,7 @@ use App\Packages\Prova\Domain\Repository\ProvaSnapshotRepository;
 use App\Packages\Prova\Domain\Repository\RespostaRepository;
 use App\Packages\User\Domain\Model\User;
 use App\Packages\User\Facade\UserFacade;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LaravelDoctrine\ORM\Facades\EntityManager;
@@ -27,7 +28,7 @@ class ProvaService
     private Prova $prova;
     private ProvaSnapshotRepository $provaSnapshotRepository;
     CONST MIN = 1;
-    CONST MAX = 10;
+    CONST MAX = 2;
 
     public function __construct(
         ProvaRepository $provaRepository,
@@ -54,8 +55,42 @@ class ProvaService
         $qtdPerguntas = $this->getQuantidadePerguntasAleatorias();
         $perguntas = $this->perguntaRepository->getPerguntasAleatorias($qtdPerguntas, $materiaId);
         $status = 'Aberta';
-        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $user, $materiaId, $perguntas);
-        $this->provaSnapshotRepository->createProvaSnapshot($prova, $perguntas, $qtdPerguntas);
+        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $user, $materiaId);
+        $this->provaSnapshotRepository->createProvaSnapshot($prova, $perguntas);
+        $provaCollection = collect();
+        $perguntasCollection = collect();
+        foreach ($perguntas as $pergunta) {
+            $perguntasCollection->add([
+                'pergunta' => $pergunta->getPergunta(),
+                'alternativas' => $pergunta->getResposta()->toArray()
+            ]);
+        }
+            $provaCollection->add([
+                'prova_id' => $prova->getId(),
+                'aluno' => $prova->getUser()->getNome(),
+                'prova_status' => $prova->getStatus(),
+                'materia_prova' => $prova->getMateria()->getMateria(),
+                'quantidade_perguntas' => $prova->getQtdPerguntas(),
+                'perguntas' => $perguntasCollection->toArray()
+            ]);
+        $provaAndPerguntas = $provaCollection[0];
+        return $provaAndPerguntas;
+    }
+
+    public function updateProva($body, $provaId)
+    {
+        $status = 'Concluída';
+        $dataInicioProva = $this->provaRepository->getDataInicioProvaByProvaId($provaId)['inicio'];
+        $termino = Carbon::now();
+        $diferenca = $termino->diffInMinutes($dataInicioProva);
+        if ($diferenca > 60) {
+            throw new Exception('Passou dos 60 minutos de prova. Não é possível entregar a prova.');
+        }
+        $this->provaSnapshotRepository->updateProvaSnapshot($body);
+        $nota_prova = $this->getNotaDaProva($provaId);
+        $this->provaRepository->updateProva($status, $provaId, $nota_prova);
+        EntityManager::flush();
+        $prova = $this->provaRepository->getProvaById($provaId);
         return $prova;
     }
 
@@ -120,5 +155,15 @@ class ProvaService
     {
         $qtdPerguntas = rand(self::MIN, self::MAX);
         return $qtdPerguntas;
+    }
+
+    public function getNotaDaProva($id)
+    {
+        $qtd_respostas_certas = count($this->provaSnapshotRepository->getRespostasMarcadasCorretamente($id));
+        $qtd_perguntas_prova = $this->provaRepository->getQuantidadeDePerguntasByProvaId($id)['qtdPerguntas'];
+        $ponto_por_pergunta = 10 / $qtd_perguntas_prova;
+        $nota_prova = $qtd_respostas_certas * $ponto_por_pergunta;
+
+        return $nota_prova;
     }
 }

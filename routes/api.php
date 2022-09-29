@@ -47,7 +47,6 @@ Route::post('/pergunta', [PerguntaController::class, 'store']);
 Route::put('/pergunta/{id}', [PerguntaController::class, 'update']);
 Route::delete('/pergunta/{id}', [PerguntaController::class, 'destroy']);
 
-//Route::post('pergunta/{id}/respostas', [RespostaController::class, 'store']);
 Route::get('respostas', [RespostaController::class, 'index']);
 Route::get('resposta/{id}', [RespostaController::class, 'show']);
 Route::post('resposta', [RespostaController::class, 'store']);
