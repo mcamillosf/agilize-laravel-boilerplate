@@ -11,6 +11,8 @@ use App\Packages\Prova\Domain\Model\ProvaSnapshot;
 use App\Packages\User\Domain\Model\User;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class ProvaRepository extends Repository

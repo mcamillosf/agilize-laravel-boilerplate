@@ -34,6 +34,11 @@ class ProvaSnapshot
     /**
      * @ORM\Column(type="string")
      */
+    public string $alternativa;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     public string $resposta_correta;
 
     /**
@@ -63,10 +68,11 @@ class ProvaSnapshot
      */
     protected $fim;
 
-    public function __construct(Prova $prova, string $pergunta, string $resposta_correta)
+    public function __construct(Prova $prova, string $pergunta, string $alternativa, string $resposta_correta)
     {
         $this->id = Str::uuid()->toString();
         $this->pergunta = $pergunta;
+        $this->alternativa = $alternativa;
         $this->resposta_correta = $resposta_correta;
         $this->prova = $prova;
         $this->inicio = Carbon::now();
@@ -103,6 +109,22 @@ class ProvaSnapshot
     public function setPergunta(string $pergunta): void
     {
         $this->pergunta = $pergunta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlternativa(): string
+    {
+        return $this->alternativa;
+    }
+
+    /**
+     * @param string $alternativa
+     */
+    public function setAlternativa(string $alternativa): void
+    {
+        $this->alternativa = $alternativa;
     }
 
     /**

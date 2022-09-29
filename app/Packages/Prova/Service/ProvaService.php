@@ -96,7 +96,16 @@ class ProvaService
 
     public function getProvaById($provaId)
     {
-        return $this->provaRepository->getProvaById($provaId);
+        $prova =  $this->provaRepository->getProvaById($provaId);
+
+        if (!$prova) {
+            throw new Exception('Prova não encontrada');
+        }
+
+        $provasCollection = collect();
+        $this->getProvaAndProvaSnapshot($prova, $provasCollection);
+
+        return $provasCollection;
     }
 
     public function getProvasByUser($userId)
@@ -110,7 +119,11 @@ class ProvaService
         if (!$provas) {
             throw new Exception('Nenhuma prova cadastrada');
         }
-        return $provas;
+        $provasCollection = collect();
+        foreach ($provas as $prova) {
+            $this->getProvaAndProvaSnapshot($prova, $provasCollection);
+        }
+        return $provasCollection;
     }
 
     /**
@@ -165,5 +178,35 @@ class ProvaService
         $nota_prova = $qtd_respostas_certas * $ponto_por_pergunta;
 
         return $nota_prova;
+    }
+
+    /**
+     * @param Prova $prova
+     * @param \Illuminate\Support\Collection $snapshotCollection
+     * @param \Illuminate\Support\Collection $provasCollection
+     * @return void
+     */
+    public function getProvaAndProvaSnapshot(Prova $prova, \Illuminate\Support\Collection $provasCollection): void
+    {
+        $snapshotCollection = collect();
+        $provaId = $prova->getId();
+        $provasSnapshot = $this->provaSnapshotRepository->getProvaSnapshotByProvaId($provaId);
+        foreach ($provasSnapshot as $provasnapshot) {
+            $snapshotCollection->add([
+                'pergunta' => $provasnapshot['pergunta'],
+                'alternativas' => json_decode($provasnapshot['alternativas']),
+            ]);
+        }
+        $provaItem = [
+            'prova_id' => $prova->getId(),
+            'aluno' => $prova->getUser()->getNome(),
+            'materia' => $prova->getMateria()->getMateria(),
+            'status' => $prova->getStatus(),
+            'quantidade_perguntas' => $prova->getQtdPerguntas(),
+            'perguntas' => $snapshotCollection->toArray(),
+        ];
+        $provasCollection->add($provaItem);
+        $snapshotCollection = collect();
+
     }
 }

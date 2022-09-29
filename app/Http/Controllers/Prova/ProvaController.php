@@ -38,16 +38,20 @@ class ProvaController extends Controller
     {
         try {
             $provas = $this->provaFacade->getProvas();
-            $provasCollection = collect();
-            /** @var Prova $prova */
-            foreach ($provas as $prova) {
-                $provasCollection->add([
-                    'prova_id' => $prova->getId(),
-                    'aluno' => $prova->getUser()->getNome(),
-                    'materia' => $prova->getMateria()->getMateria(),
-                ]);
-            }
-            return response()->json($provasCollection->toArray());
+            return response()->json($provas->toArray());
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
+    public function show(Request $request)
+    {
+        try {
+            $id = $request->route('id');
+            $prova = $this->provaFacade->getProvaById($id);
+            return response()->json($prova->toArray());
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()

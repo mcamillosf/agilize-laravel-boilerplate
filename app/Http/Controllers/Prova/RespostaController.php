@@ -48,7 +48,7 @@ class RespostaController extends Controller
             ]);
 
         EntityManager::flush();
-        return response()->json($respostasCollection->toArray());
+        return response()->json([$respostasCollection->toArray()], 201);
         } catch (\Exception $exception){
             return response()->json([
                 'message' => $exception->getMessage()

@@ -48,7 +48,7 @@ class PerguntaController extends Controller
             'pergunta' => $pergunta->getPergunta()
         ]);
         EntityManager::flush();
-        return $perguntaCollection;
+        return response()->json([$perguntaCollection], 201);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()

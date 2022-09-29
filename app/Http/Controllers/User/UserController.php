@@ -26,8 +26,14 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        try {
         $nome = $request->get('name');
-//        dump($nome);
-        return $this->userFacade->criarUsuario($nome);
+        $student = $this->userFacade->criarUsuario($nome);
+        return response()->json([$student], 201);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
     }
 }

@@ -106,11 +106,7 @@ class ProvaFacade
         return $this->provaService->getProvas();
     }
 
-    /**
-     * @param $provaId
-     * @return mixed
-     */
-    public function getProvaById($provaId): mixed
+    public function getProvaById($provaId)
     {
         return $this->provaService->getProvaById($provaId);
     }

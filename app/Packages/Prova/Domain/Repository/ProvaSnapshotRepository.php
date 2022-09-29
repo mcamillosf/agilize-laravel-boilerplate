@@ -10,6 +10,7 @@ use App\Packages\Prova\Domain\Model\ProvaSnapshot;
 use App\Packages\Prova\Domain\Repository\RespostaRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
 class ProvaSnapshotRepository extends Repository
@@ -52,10 +53,27 @@ class ProvaSnapshotRepository extends Repository
     {
         /** @var RespostaRepository $respEntity */
         foreach ($perguntas as $pergunta) {
+            $respostas = $pergunta->getResposta()->toArray();
             $respostaCorreta = $this->respEntity->getRespostaCorretaByPerguntaId($pergunta->getId())['resposta'];
-            $snapProva = new ProvaSnapshot($prova, $pergunta->getPergunta(), $respostaCorreta);
-            $this->add($snapProva);
+            foreach ($respostas as $resposta) {
+                $snapProva = new ProvaSnapshot($prova, $pergunta->getPergunta(), $resposta->getResposta(), $respostaCorreta);
+                $this->add($snapProva);
+            }
         }
+    }
+
+    public function getProvaSnapshotByProvaId($provaId)
+    {
+        $sql = 'select pergunta, resposta_marcada, resposta_correta,
+            json_agg(alternativa) as alternativas
+            from provas_snapshot
+            where prova_id = ?
+            group by pergunta, resposta_marcada, resposta_correta';
+
+        $rsm = new ResultSetMapping();
+        $em = $this->getEntityManager()->getConnection()->prepare($sql);
+        $result = $em->executeQuery([$provaId]);
+        return $result->fetchAllAssociative();
     }
 
     public function updateProvaSnapshot($body)
