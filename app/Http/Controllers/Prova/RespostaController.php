@@ -55,4 +55,42 @@ class RespostaController extends Controller
             ], 400);
         }
     }
+
+    public function show(Request $request)
+    {
+        try {
+        $respostaId = $request->route('id');
+        $resposta = $this->provaFacade->getRespostaById($respostaId);
+        $respostaCollection = collect();
+        $respostaCollection->add([
+            'id' => $resposta->getId(),
+            'alternativa' => $resposta->getResposta(),
+            'resposta_correta' => (boolean)$resposta->getRespostaCorreta(),
+        ]);
+        return response()->json($respostaCollection[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $id = $request->route('id');
+            $respostaAtualizada = $this->provaFacade->updateResposta($id, $request->toArray());
+            $respostaCollection = collect();
+            $respostaCollection->add([
+                'id' => $respostaAtualizada->getId(),
+                'resposta' => $respostaAtualizada->getResposta(),
+                'resposta_correta' => (boolean)$respostaAtualizada->getRespostaCorreta(),
+            ]);
+            return response()->json($respostaCollection[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
 }

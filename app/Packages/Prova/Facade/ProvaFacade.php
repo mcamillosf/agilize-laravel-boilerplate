@@ -39,12 +39,7 @@ class ProvaFacade
         return $this->perguntaService->getPerguntas();
     }
 
-    /**
-     * @param $perguntaId
-     * @return float|int|mixed|string|null
-     * @throws NonUniqueResultException
-     */
-    public function getPerguntaById($perguntaId): mixed
+    public function getPerguntaById($perguntaId)
     {
         return $this->perguntaService->getPerguntaById($perguntaId);
     }
@@ -55,21 +50,19 @@ class ProvaFacade
         return $this->respostaService->createResposta($request);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRespostas(): mixed
+    public function getRespostas()
     {
         return $this->respostaService->getRespostas();
     }
 
-    /**
-     * @param $respostaId
-     * @return mixed
-     */
-    public function getRespostaById($respostaId): mixed
+    public function getRespostaById($respostaId)
     {
         return $this->respostaService->getRespostaById($respostaId);
+    }
+
+    public function updateResposta($id, $request)
+    {
+        return $this->respostaService->updateRespostaById($id, $request);
     }
 
     public function createMateria($request)
@@ -82,13 +75,14 @@ class ProvaFacade
         return $this->materiaService->getMaterias();
     }
 
-    /**
-     * @param $materia
-     * @return float|int|mixed|string
-     */
-    public function getMateriaByName($materia): mixed
+    public function getMateriaByName($materia)
     {
         return $this->materiaService->getMateriaByName($materia);
+    }
+
+    public function getMateriaById($materiaId)
+    {
+        return $this->materiaService->getMateriaById($materiaId);
     }
 
     public function createProva($request)
@@ -111,11 +105,7 @@ class ProvaFacade
         return $this->provaService->getProvaById($provaId);
     }
 
-    /**
-     * @param $userId
-     * @return mixed
-     */
-    public function getProvasByUser($userId): mixed
+    public function getProvasByUser($userId)
     {
         return $this->provaService->getProvasByUser($userId);
     }

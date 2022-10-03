@@ -91,7 +91,8 @@ class ProvaService
         $this->provaRepository->updateProva($status, $provaId, $nota_prova);
         EntityManager::flush();
         $prova = $this->provaRepository->getProvaById($provaId);
-        return $prova;
+        $provasCollection = $this->getResultadoProvaFinalizada($prova, $provaId);
+        return $provasCollection;
     }
 
     public function getProvaById($provaId)
@@ -126,11 +127,6 @@ class ProvaService
         return $provasCollection;
     }
 
-    /**
-     * @param $request
-     * @return mixed
-     * @throws Exception
-     */
     public function getAluno($request)
     {
         $nome = $request->get('nome');
@@ -208,5 +204,38 @@ class ProvaService
         $provasCollection->add($provaItem);
         $snapshotCollection = collect();
 
+    }
+
+    /**
+     * @param mixed $prova
+     * @param $provaId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getResultadoProvaFinalizada(mixed $prova, $provaId): \Illuminate\Support\Collection
+    {
+        $snapshotCollection = collect();
+        $provasCollection = collect();
+        $provaId = $prova->getId();
+        $provasSnapshot = $this->provaSnapshotRepository->getProvaSnapshotByProvaId($provaId);
+        foreach ($provasSnapshot as $provasnapshot) {
+            $snapshotCollection->add([
+                'pergunta' => $provasnapshot['pergunta'],
+                'resposta_marcada' => $provasnapshot['resposta_marcada'],
+                'resposta_correta' => $provasnapshot['resposta_correta'],
+                'alternativas' => json_decode($provasnapshot['alternativas']),
+            ]);
+        }
+        $provaItem = [
+            'prova_id' => $prova->getId(),
+            'aluno' => $prova->getUser()->getNome(),
+            'materia' => $prova->getMateria()->getMateria(),
+            'status' => $prova->getStatus(),
+            'quantidade_perguntas' => $prova->getQtdPerguntas(),
+            'nota_prova' => $prova->getNotaProva(),
+            'perguntas' => $snapshotCollection->toArray(),
+        ];
+        $provasCollection->add($provaItem);
+        $snapshotCollection = collect();
+        return $provasCollection;
     }
 }

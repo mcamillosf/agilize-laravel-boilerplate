@@ -56,4 +56,38 @@ class PerguntaController extends Controller
         }
     }
 
+    public function show(Request $request)
+    {
+        try {
+            $perguntaId = $request->route('id');
+            $pergunta = $this->provaFacade->getPerguntaById($perguntaId);
+            $respostas = $pergunta->getResposta()->toArray();
+            $respostasCollection = collect();
+            foreach ($respostas as $resposta) {
+                $respostasCollection->add([
+                    'id' => $resposta->getId(),
+                    'alternativa' => $resposta->getResposta()
+                ]);
+            }
+            $perguntaCollection = collect();
+            /** @var Pergunta $pergunta */
+            $perguntaCollection->add([
+                'id' => $pergunta->getId(),
+                'pergunta' => $pergunta->getPergunta(),
+                'materia' => $pergunta->getMateria()->getMateria(),
+                'alternativas' => $respostasCollection
+            ]);
+            return response()->json($perguntaCollection);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
+    public function update()
+    {
+        
+    }
+
 }

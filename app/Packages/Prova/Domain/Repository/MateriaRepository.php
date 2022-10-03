@@ -26,6 +26,18 @@ class MateriaRepository extends Repository
             ->getOneOrNullResult();
     }
 
+    public function getMateriaById($id)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->select('materia')
+            ->from($this->entityName, 'materia')
+            ->where('materia.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @param $name
      * @return float|int|mixed|string

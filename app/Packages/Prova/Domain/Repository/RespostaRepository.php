@@ -56,6 +56,53 @@ class RespostaRepository extends Repository
             ->getOneOrNullResult();
     }
 
+    public function updateRespostaAndRespostaCorreta($id, $resposta, $resposta_correta)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'resposta')
+            ->set('resposta.resposta', ':resposta')
+            ->set('resposta.respostaCorreta', ':respostaCorreta')
+            ->where('resposta.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'resposta' => $resposta,
+                'respostaCorreta' => $resposta_correta
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function updateResposta($id, $resposta)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'resposta')
+            ->set('resposta.resposta', ':resposta')
+            ->where('resposta.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'resposta' => $resposta
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function updateRespostaCorreta($id, $resposta_correta)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'resposta')
+            ->set('resposta.respostaCorreta', ':respostaCorreta')
+            ->where('resposta.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'respostaCorreta' => $resposta_correta
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getRespostaIdByResposta($resposta)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();

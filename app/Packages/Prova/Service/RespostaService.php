@@ -38,18 +38,34 @@ class RespostaService
         $res = $this->respostaRepository->createResposta($perguntaId, $resposta, $resposta_correta);
 
         return $res;
-//        return 'oi';
     }
 
-    /**
-     * @param $respostaId
-     * @return mixed
-     */
-    public function getRespostaById($respostaId): mixed
+    public function getRespostaById($respostaId)
     {
-        return $this->respostaRepository->getRespostaById($respostaId);
+        $resposta = $this->respostaRepository->getRespostaById($respostaId);
+
+        if (!$resposta) {
+            throw new \Exception('Resposta não encontrada');
+        }
+
+        return $resposta;
     }
 
+    public function updateRespostaById($id, $request)
+    {
+        $resposta = $request['resposta'];
+        $resposta_correta = $request['resposta_correta'];
+        if ($resposta_correta === null) {
+             $this->respostaRepository->updateResposta($id, $resposta);
+             return $this->getRespostaById($id);
+        }
+        if ($resposta === null) {
+             $this->respostaRepository->updateRespostaCorreta($id, $resposta_correta);
+            return $this->getRespostaById($id);
+        }
+        $this->respostaRepository->updateRespostaAndRespostaCorreta($id, $resposta, $resposta_correta);
+        return $this->getRespostaById($id);
+    }
 
     public function getRespostas()
     {

@@ -30,9 +30,14 @@ class MateriaService
         return $mat;
     }
 
-    public function getMateriaByName($materiaId)
+    public function getMateriaByName($materia)
     {
-        return $this->materiaRepository->getMateriaByName($materiaId);
+        return $this->materiaRepository->getMateriaByName($materia);
+    }
+
+    public function getMateriaById($materiaId)
+    {
+        return $this->materiaRepository->getMateriaById($materiaId);
     }
 
     public function getMaterias()

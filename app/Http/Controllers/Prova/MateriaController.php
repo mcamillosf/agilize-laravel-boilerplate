@@ -49,4 +49,27 @@ class MateriaController extends Controller
             ], 400);
         }
     }
+
+    public function show(Request $request)
+    {
+        try {
+            $materiaId = $request->route('id');
+            $materia = $this->provaFacade->getMateriaById($materiaId);
+            $materiaCollection = collect();
+            $materiaCollection->add([
+                'id' => $materia->getId(),
+                'materia' => $materia->getMateria(),
+            ]);
+            return response()->json($materiaCollection[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
+    public function update()
+    {
+        
+    }
 }

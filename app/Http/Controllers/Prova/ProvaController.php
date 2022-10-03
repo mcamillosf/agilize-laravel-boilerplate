@@ -64,41 +64,11 @@ class ProvaController extends Controller
         try {
         $id = $request->route('id');
         $provaFinalizada = $this->provaFacade->finalizarProva($request->toArray(), $id);
-        $provaResultado = $this->getResultadoProva($provaFinalizada);
-        return response()->json($provaResultado[0]);
+        return response()->json($provaFinalizada);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()
             ], 400);
         }
-    }
-
-    /**
-     * @param mixed $provaFinalizada
-     * @return Collection
-     */
-    public function getResultadoProva(mixed $provaFinalizada): Collection
-    {
-        $perguntas = $provaFinalizada->getSnapshot()->toArray();
-        $perguntasCollection = collect();
-        foreach ($perguntas as $pergunta) {
-            $perguntasCollection->add([
-                'pergunta' => $pergunta->getPergunta(),
-                'alternativa_correta' => $pergunta->getRespostaCorreta(),
-                'alternativa_marcada' => $pergunta->getRespostaMarcada(),
-            ]);
-        }
-        $provaCollection = collect();
-        /** @var Prova $prova */
-        $provaCollection->add([
-            'prova_id' => $provaFinalizada->getId(),
-            'aluno' => $provaFinalizada->getUser()->getNome(),
-            'prova_status' => $provaFinalizada->getStatus(),
-            'materia_prova' => $provaFinalizada->getMateria()->getMateria(),
-            'quantidade_perguntas' => $provaFinalizada->getQtdPerguntas(),
-            'nota_prova' => $provaFinalizada->getNotaProva(),
-            'gabarito' => $perguntasCollection->toArray()
-        ]);
-        return $provaCollection;
     }
 }
