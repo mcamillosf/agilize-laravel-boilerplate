@@ -44,4 +44,10 @@ class MateriaService
     {
         return $this->materiaRepository->getMaterias();
     }
+
+    public function updateMateria($id, $request)
+    {
+        $materia = $request['materia'];
+        return $this->materiaRepository->updateMateria($id, $materia);
+    }
 }

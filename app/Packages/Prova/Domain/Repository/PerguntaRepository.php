@@ -97,4 +97,18 @@ class PerguntaRepository extends Repository
         return $perg;
     }
 
+    public function updatePergunta($id, $pergunta)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'pergunta')
+            ->set('pergunta.pergunta', ':pergunta')
+            ->where('pergunta.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'pergunta' => $pergunta
+            ])
+            ->getQuery()
+            ->getResult();
+    }
 }

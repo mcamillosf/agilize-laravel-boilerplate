@@ -68,8 +68,22 @@ class MateriaController extends Controller
         }
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        
+        try {
+            $id = $request->route('id');
+            $materiaAtualizada = $this->provaFacade->updateMateria($id, $request->toArray());
+            $materiaCollection = collect();
+            $materiaCollection->add([
+                'id' => $materiaAtualizada->getId(),
+                'resposta' => $materiaAtualizada->getResposta(),
+                'resposta_correta' => (boolean)$materiaAtualizada->getRespostaCorreta(),
+            ]);
+            return response()->json($materiaCollection[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
     }
 }

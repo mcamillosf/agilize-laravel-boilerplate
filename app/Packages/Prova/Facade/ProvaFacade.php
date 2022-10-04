@@ -44,6 +44,10 @@ class ProvaFacade
         return $this->perguntaService->getPerguntaById($perguntaId);
     }
 
+    public function updatePergunta($id, $request)
+    {
+        return $this->perguntaService->updatePergunta($id, $request);
+    }
 
     public function createResposta($request)
     {
@@ -83,6 +87,11 @@ class ProvaFacade
     public function getMateriaById($materiaId)
     {
         return $this->materiaService->getMateriaById($materiaId);
+    }
+
+    public function updateMateria($id, $request)
+    {
+        return $this->materiaService->updateMateria($id, $request);
     }
 
     public function createProva($request)

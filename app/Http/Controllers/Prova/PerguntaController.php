@@ -85,9 +85,23 @@ class PerguntaController extends Controller
         }
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        
+        try {
+            $id = $request->route('id');
+            $perguntaAtualizada = $this->provaFacade->updatePergunta($id, $request->toArray());
+            $perguntaCollection = collect();
+            $perguntaCollection->add([
+                'id' => $perguntaAtualizada->getId(),
+                'resposta' => $perguntaAtualizada->getResposta(),
+                'resposta_correta' => (boolean)$perguntaAtualizada->getRespostaCorreta(),
+            ]);
+            return response()->json($perguntaCollection[0]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
     }
 
 }

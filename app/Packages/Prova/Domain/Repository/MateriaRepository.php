@@ -70,4 +70,19 @@ class MateriaRepository extends Repository
         $this->add($mat);
         return $mat;
     }
+
+    public function updateMateria($id, $materia)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'materia')
+            ->set('materia.materia', ':materia')
+            ->where('materia.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'materia' => $materia
+            ])
+            ->getQuery()
+            ->getResult();
+    }
 }
