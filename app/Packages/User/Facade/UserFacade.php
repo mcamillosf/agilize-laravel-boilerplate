@@ -31,4 +31,14 @@ class UserFacade
     {
         return $this->userService->getUserIdByName($nome);
     }
+
+    public function updateUser($id, $request)
+    {
+        return $this->userService->updateUser($id, $request);
+    }
+
+    public function getUserById($id)
+    {
+        return $this->userService->getUserById($id);
+    }
 }

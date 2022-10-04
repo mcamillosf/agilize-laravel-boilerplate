@@ -56,6 +56,7 @@ class PerguntaService
     public function updatePergunta($id, $request)
     {
         $pergunta = $request['pergunta'];
-        return $this->perguntaRepository->updatePergunta($id, $pergunta);
+        $this->perguntaRepository->updatePergunta($id, $pergunta);
+        return $this->getPerguntaById($id);
     }
 }

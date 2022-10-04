@@ -43,4 +43,16 @@ class UserService
     {
         return $this->userRepository->getAllUsers();
     }
+
+    public function updateUser($id, $request)
+    {
+        $nome = $request['nome'];
+        $this->userRepository->updateUser($id, $nome);
+        return $this->userRepository->getUserById($id);
+    }
+
+    public function getUserById($id)
+    {
+        return $this->userRepository->getUserById($id);
+    }
 }

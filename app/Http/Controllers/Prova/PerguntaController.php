@@ -93,8 +93,7 @@ class PerguntaController extends Controller
             $perguntaCollection = collect();
             $perguntaCollection->add([
                 'id' => $perguntaAtualizada->getId(),
-                'resposta' => $perguntaAtualizada->getResposta(),
-                'resposta_correta' => (boolean)$perguntaAtualizada->getRespostaCorreta(),
+                'pergunta' => $perguntaAtualizada->getPergunta(),
             ]);
             return response()->json($perguntaCollection[0]);
         } catch (\Exception $exception) {

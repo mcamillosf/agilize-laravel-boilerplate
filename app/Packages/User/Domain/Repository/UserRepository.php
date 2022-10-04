@@ -43,6 +43,33 @@ class UserRepository extends Repository
             ->getResult();
     }
 
+    public function getUserById($id)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->select('user')
+            ->from($this->entityName, 'user')
+            ->where('user.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function updateUser($id, $nome)
+    {
+        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
+        return $queryBuilder
+            ->update($this->entityName, 'user')
+            ->set('user.nome', ':nome')
+            ->where('user.id = :id')
+            ->setParameters([
+                'id' => $id,
+                'nome' => $nome
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
     public function createUser($name)
     {
         $user = new User($name);

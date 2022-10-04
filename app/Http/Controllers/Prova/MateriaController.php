@@ -76,8 +76,7 @@ class MateriaController extends Controller
             $materiaCollection = collect();
             $materiaCollection->add([
                 'id' => $materiaAtualizada->getId(),
-                'resposta' => $materiaAtualizada->getResposta(),
-                'resposta_correta' => (boolean)$materiaAtualizada->getRespostaCorreta(),
+                'materia' => $materiaAtualizada->getMateria(),
             ]);
             return response()->json($materiaCollection[0]);
         } catch (\Exception $exception) {
