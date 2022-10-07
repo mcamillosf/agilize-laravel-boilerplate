@@ -21,21 +21,17 @@ class RespostaService
         $this->perguntaRepository = $perguntaRepository;
     }
 
-    public function createResposta($request)
+    public function createResposta($pergunta, $resposta, $resposta_correta)
     {
-        $resposta_correta = $request->get('resposta_correta');
-        $resposta = $request->get('resposta');
         $respostaId = $this->respostaRepository->getRespostaIdByResposta($resposta);
         if ($respostaId) {
             throw new \Exception('Resposta já cadastrada');
         }
-        $pergunta = $request->get('pergunta');
-        $perguntaI = $this->perguntaRepository->getPerguntaIdByPergunta($pergunta);
-        if (!$perguntaI) {
-            return 'Pergunta não encontrada!';
+        $perguntaEntity = $this->perguntaRepository->getPerguntaByPergunta($pergunta);
+        if (!$perguntaEntity) {
+            throw new \Exception('Pergunta não encontrada!');
         }
-        $perguntaId = $perguntaI['id']->toString();
-        $res = $this->respostaRepository->createResposta($perguntaId, $resposta, $resposta_correta);
+        $res = $this->respostaRepository->createResposta($perguntaEntity, $resposta, $resposta_correta);
 
         return $res;
     }

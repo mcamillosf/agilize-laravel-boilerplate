@@ -49,9 +49,9 @@ class ProvaFacade
         return $this->perguntaService->updatePergunta($id, $request);
     }
 
-    public function createResposta($request)
+    public function createResposta($resposta_correta, $resposta, $pergunta)
     {
-        return $this->respostaService->createResposta($request);
+        return $this->respostaService->createResposta($resposta_correta, $resposta, $pergunta);
     }
 
     public function getRespostas()

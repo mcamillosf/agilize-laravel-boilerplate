@@ -44,22 +44,6 @@ class PerguntaRepository extends Repository
             ->getOneOrNullResult();
     }
 
-    public function getPerguntaIdByPergunta($pergunta)
-    {
-        $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
-        return $queryBuilder
-            ->select('pergunta.id')
-            ->from($this->entityName, 'pergunta')
-            ->where('pergunta.pergunta = :pergunta')
-            ->setParameter('pergunta', $pergunta)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    /**
-     * @param $pergunta
-     * @throws NonUniqueResultException
-     */
     public function getPerguntaByPergunta($pergunta)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();

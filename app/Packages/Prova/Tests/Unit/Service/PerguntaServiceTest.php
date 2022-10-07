@@ -91,4 +91,17 @@ class PerguntaServiceTest extends TestCase
 
         $this->assertEquals($perguntas, $result);
     }
+
+    public function testItWillReturnOnePergunta()
+    {
+        $pergunta = ['id' => '1', 'pergunta' => 'sei la', 'materia' => 'php'];
+        $mockMateriaRepository = $this->createMock(MateriaRepository::class);
+        $perguntaRepositoryMock = $this->createMock(PerguntaRepository::class);
+        $perguntaRepositoryMock->method('getPerguntaById')->willReturn($pergunta);
+        $this->perguntaService = new PerguntaService($perguntaRepositoryMock, $mockMateriaRepository);
+
+        $result = $this->perguntaService->getPerguntaById('1');
+
+        $this->assertEquals($pergunta, $result);
+    }
 }

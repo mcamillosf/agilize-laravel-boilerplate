@@ -39,7 +39,10 @@ class RespostaController extends Controller
     public function store(Request $request)
     {
         try {
-        $resposta = $this->provaFacade->createResposta($request);
+        $resposta_correta = $request->get('resposta_correta');
+        $resposta = $request->get('resposta');
+        $pergunta = $request->get('pergunta');
+        $resposta = $this->provaFacade->createResposta($resposta_correta, $resposta, $pergunta);
         $respostasCollection = collect();
             $respostasCollection->add([
                 'id' => $resposta->getId(),

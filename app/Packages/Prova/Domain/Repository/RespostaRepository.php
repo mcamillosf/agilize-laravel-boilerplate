@@ -132,11 +132,8 @@ class RespostaRepository extends Repository
             ->getResult();
     }
 
-    public function createResposta($perguntaId, $resposta, $respostaCorreta)
+    public function createResposta($pergunta, $resposta, $respostaCorreta)
     {
-        /**
-         * @var Pergunta $pergunta */
-        $pergunta = EntityManager::getRepository(Pergunta::class)->findOneBy(['id' => $perguntaId]);
         $res = new Resposta($resposta, $respostaCorreta, $pergunta);
         $pergunta->addResposta($res);
         $this->add($res);
