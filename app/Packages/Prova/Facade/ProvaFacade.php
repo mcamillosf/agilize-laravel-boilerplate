@@ -69,9 +69,9 @@ class ProvaFacade
         return $this->respostaService->updateRespostaById($id, $request);
     }
 
-    public function createMateria($request)
+    public function createMateria($nomeMateria)
     {
-        return $this->materiaService->createMateria($request);
+        return $this->materiaService->createMateria($nomeMateria);
     }
 
     public function getMaterias()

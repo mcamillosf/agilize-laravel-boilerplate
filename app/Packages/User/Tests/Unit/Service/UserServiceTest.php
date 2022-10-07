@@ -50,9 +50,4 @@ class UserServiceTest extends TestCase
         // then
         $this->assertCount(2, $result);
     }
-
-//    public function testeItWillUpdateUser()
-//    {
-//
-//    }
 }

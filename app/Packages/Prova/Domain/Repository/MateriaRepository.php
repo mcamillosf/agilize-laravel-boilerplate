@@ -10,11 +10,7 @@ class MateriaRepository extends Repository
 {
     protected string $entityName = Materia::class;
 
-    /**
-     * @param string $name
-     * @return float|int|mixed|string
-     */
-    public function getMateriaByName(string $name): mixed
+    public function getMateriaByName(string $name)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder
@@ -38,11 +34,7 @@ class MateriaRepository extends Repository
             ->getOneOrNullResult();
     }
 
-    /**
-     * @param $name
-     * @return float|int|mixed|string
-     */
-    public function getMateriaIdByName($name): mixed
+    public function getMateriaIdByName($name)
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder

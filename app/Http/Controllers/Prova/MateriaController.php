@@ -35,7 +35,8 @@ class MateriaController extends Controller
     public function store(Request $request)
     {
         try {
-            $materia = $this->provaFacade->createMateria($request);
+            $nomeMateria = $request->get('materia');
+            $materia = $this->provaFacade->createMateria($nomeMateria);
             $materiaCollection = collect();
             $materiaCollection->add([
                 'id' => $materia->getId(),

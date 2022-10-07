@@ -18,14 +18,13 @@ class MateriaService
         $this->materiaRepository = $materiaRepository;
     }
 
-    public function createMateria($request)
+    public function createMateria($nomeMateria)
     {
-        $materia = $request->get('materia');
-        $mate = $this->materiaRepository->getMateriaByName($materia);
+        $mate = $this->materiaRepository->getMateriaByName($nomeMateria);
         if ($mate) {
             throw new \Exception('Materia já cadastrada');
         }
-        $mat = $this->materiaRepository->createMateria($materia);
+        $mat = $this->materiaRepository->createMateria($nomeMateria);
 
         return $mat;
     }
