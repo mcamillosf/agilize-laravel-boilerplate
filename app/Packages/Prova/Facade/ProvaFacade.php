@@ -29,9 +29,9 @@ class ProvaFacade
         $this->materiaService = $materiaService;
     }
 
-    public function createPergunta($request)
+    public function createPergunta($pergunta, $materia)
     {
-        return $this->perguntaService->createPergunta($request);
+        return $this->perguntaService->createPergunta($pergunta, $materia);
     }
 
     public function getPerguntas()

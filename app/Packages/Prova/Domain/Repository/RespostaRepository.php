@@ -132,13 +132,7 @@ class RespostaRepository extends Repository
             ->getResult();
     }
 
-    /**
-     * @param $perguntaId
-     * @param $resposta
-     * @param $respostaCorreta
-     * @return Resposta
-     */
-    public function createResposta($perguntaId, $resposta, $respostaCorreta): Resposta
+    public function createResposta($perguntaId, $resposta, $respostaCorreta)
     {
         /**
          * @var Pergunta $pergunta */

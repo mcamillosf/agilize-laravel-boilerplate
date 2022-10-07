@@ -82,16 +82,8 @@ class PerguntaRepository extends Repository
             ->getResult();
     }
 
-    /**
-     * @param $pergunta
-     * @param $materiaId
-     * @return Pergunta
-     */
-    public function createPergunta($pergunta, $materiaId): Pergunta
+    public function createPergunta($pergunta, $materia)
     {
-        /**
-         * @var Materia $materia */
-        $materia = EntityManager::getRepository(Materia::class)->findOneBy(['id' => $materiaId]);
         $perg = new Pergunta($pergunta, $materia);
         $this->add($perg);
         return $perg;

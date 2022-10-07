@@ -41,7 +41,9 @@ class PerguntaController extends Controller
     public function store(Request $request)
     {
         try {
-        $pergunta = $this->provaFacade->createPergunta($request);
+        $pergunta = $request->get('pergunta');
+        $materia = $request->get('materia');
+        $pergunta = $this->provaFacade->createPergunta($pergunta, $materia);
         $perguntaCollection = collect();
         $perguntaCollection->add([
             'id' => $pergunta->getId(),

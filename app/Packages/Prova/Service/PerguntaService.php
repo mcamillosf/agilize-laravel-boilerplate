@@ -21,15 +21,13 @@ class PerguntaService
         $this->perguntaRepository = $perguntaRepository;
     }
 
-    public function createPergunta($request)
+    public function createPergunta($pergunta, $materia)
     {
-        $pergunta = $request->get('pergunta');
-        $materia = $request->get('materia');
         $perg = $this->perguntaRepository->getPerguntaByPergunta($pergunta);
         if ($perg) {
             throw new \Exception('Pergunta ja cadastrada no banco de dados!');
         }
-        $materiaId = $this->materiaRepository->getMateriaIdByName($materia)['id']->toString();
+        $materiaId = $this->materiaRepository->getMateriaIdByName($materia);
         if (!$materiaId) {
             throw new \Exception('Matéria não existe no banco de dados');
         }

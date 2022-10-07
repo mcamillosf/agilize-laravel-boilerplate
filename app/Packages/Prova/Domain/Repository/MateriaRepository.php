@@ -38,7 +38,7 @@ class MateriaRepository extends Repository
     {
         $queryBuilder = $this->GetEntityManager()->createQueryBuilder();
         return $queryBuilder
-            ->select('materia.id')
+            ->select('materia')
             ->from($this->entityName, 'materia')
             ->where('materia.materia = :name')
             ->setParameter('name', $name)
