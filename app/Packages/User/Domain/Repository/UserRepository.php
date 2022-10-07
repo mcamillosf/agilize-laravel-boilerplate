@@ -74,6 +74,6 @@ class UserRepository extends Repository
     {
         $user = new User($name);
         $this->add($user);
-        return 'Usuário criado com sucesso';
+        return $user;
     }
 }

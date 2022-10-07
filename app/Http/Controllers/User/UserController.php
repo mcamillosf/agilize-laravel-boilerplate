@@ -61,7 +61,12 @@ class UserController extends Controller
         try {
         $nome = $request->get('name');
         $student = $this->userFacade->criarUsuario($nome);
-        return response()->json([$student], 201);
+        $studentCollection = collect();
+        $studentCollection->add([
+            'id' => $student->getId(),
+            'nome' => $student->getNome()
+        ]);
+        return response()->json([$studentCollection[0]], 201);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()

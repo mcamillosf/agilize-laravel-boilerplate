@@ -19,7 +19,7 @@ class UserService
     {
         $user = $this->userRepository->findUserByName($name);
         if ($user) {
-            return 'Usuário já existe';
+            throw new \Exception('Usuário já cadastrado');
         }
         return $this->userRepository->createUser($name);
     }
@@ -27,11 +27,6 @@ class UserService
     public function update(User $user)
     {
         $this->userRepository->update($user);
-    }
-
-    public function remove($nome)
-    {
-        $this->remove($this->getUserIdByName($nome));
     }
 
     public function getUserIdByName($name)
