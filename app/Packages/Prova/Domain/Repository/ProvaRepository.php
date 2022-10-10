@@ -105,11 +105,8 @@ class ProvaRepository extends Repository
             ->getResult();
     }
 
-    public function createProva($status, $qtdPerguntas, $user, $materiaId)
+    public function createProva($status, $qtdPerguntas, $user, $materia)
     {
-        /**
-         * @var Materia $materia */
-        $materia = EntityManager::getRepository(Materia::class)->findOneBy(['id' => $materiaId]);
         $inicio = Carbon::now();
         $prova = new Prova($status, $qtdPerguntas, $user, $materia, $inicio);
         $this->add($prova);

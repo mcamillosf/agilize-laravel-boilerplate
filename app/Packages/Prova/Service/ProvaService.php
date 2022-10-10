@@ -50,12 +50,12 @@ class ProvaService
 
     public function createProva($request)
     {
-        $materiaId = $this->getMateria($request);
+        $materia = $this->getMateria($request);
         $user = $this->getAluno($request);
         $qtdPerguntas = $this->getQuantidadePerguntasAleatorias();
-        $perguntas = $this->perguntaRepository->getPerguntasAleatorias($qtdPerguntas, $materiaId);
+        $perguntas = $this->perguntaRepository->getPerguntasAleatorias($qtdPerguntas, $materia->getId());
         $status = 'Aberta';
-        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $user, $materiaId);
+        $prova = $this->provaRepository->createProva($status, $qtdPerguntas, $user, $materia);
         $this->provaSnapshotRepository->createProvaSnapshot($prova, $perguntas);
         $provaCollection = collect();
         $perguntasCollection = collect();
@@ -153,8 +153,7 @@ class ProvaService
         if (!$materiaBd) {
             throw new Exception('Matéria não cadastrada');
         }
-        $materiaId = $materiaBd['id']->toString();
-        return $materiaId;
+        return $materiaBd;
     }
 
     /**
