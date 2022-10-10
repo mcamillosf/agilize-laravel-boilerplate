@@ -42,7 +42,7 @@ class RespostaController extends Controller
         $resposta_correta = $request->get('resposta_correta');
         $resposta = $request->get('resposta');
         $pergunta = $request->get('pergunta');
-        $resposta = $this->provaFacade->createResposta($resposta_correta, $resposta, $pergunta);
+        $resposta = $this->provaFacade->createResposta($pergunta, $resposta, $resposta_correta);
         $respostasCollection = collect();
             $respostasCollection->add([
                 'id' => $resposta->getId(),
@@ -51,7 +51,7 @@ class RespostaController extends Controller
             ]);
 
         EntityManager::flush();
-        return response()->json([$respostasCollection->toArray()], 201);
+        return response()->json([$respostasCollection[0]], 201);
         } catch (\Exception $exception){
             return response()->json([
                 'message' => $exception->getMessage()

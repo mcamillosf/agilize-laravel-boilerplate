@@ -43,7 +43,7 @@ class MateriaController extends Controller
                 'materia' => $materia->getMateria()
             ]);
             EntityManager::flush();
-            return response()->json([$materiaCollection->toArray()], 201);
+            return response()->json([$materiaCollection[0]], 201);
         } catch (\Exception $exception) {
             return response()->json([
                 'message' => $exception->getMessage()

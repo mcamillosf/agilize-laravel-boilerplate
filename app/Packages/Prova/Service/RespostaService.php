@@ -27,7 +27,7 @@ class RespostaService
         if ($respostaId) {
             throw new \Exception('Resposta já cadastrada');
         }
-        $perguntaEntity = $this->perguntaRepository->getPerguntaByPergunta($pergunta);
+        $perguntaEntity = $this->perguntaRepository->getPerguntaById($pergunta);
         if (!$perguntaEntity) {
             throw new \Exception('Pergunta não encontrada!');
         }
