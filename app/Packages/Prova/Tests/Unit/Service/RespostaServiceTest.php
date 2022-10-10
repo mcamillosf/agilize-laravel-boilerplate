@@ -26,13 +26,13 @@ class RespostaServiceTest extends TestCase
         $respostaRepositoryMock->method('createResposta')->willReturn($resposta);
 
         $perguntaRepositoryMock = $this->createMock(PerguntaRepository::class);
-        $perguntaRepositoryMock->method('getPerguntaByPergunta')->willReturn($pergunta);
+        $perguntaRepositoryMock->method('getPerguntaById')->willReturn($pergunta);
         $this->app->bind(PerguntaRepository::class, fn() => $perguntaRepositoryMock);
         $this->perguntaRepository = app(PerguntaRepository::class);
 
         $this->respostaService = new RespostaService($respostaRepositoryMock, $perguntaRepositoryMock);
 
-        $perguntaResult = $this->perguntaRepository->getPerguntaByPergunta('que dia e hoje');
+        $perguntaResult = $this->perguntaRepository->getPerguntaById('1');
 
         $result = $this->respostaService->createResposta($perguntaResult, 'sexta', true);
 
