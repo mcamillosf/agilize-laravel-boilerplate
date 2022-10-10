@@ -36,7 +36,16 @@ class MateriaService
 
     public function getMateriaById($materiaId)
     {
-        return $this->materiaRepository->getMateriaById($materiaId);
+        try {
+        $materia = $this->materiaRepository->getMateriaById($materiaId);
+        if (!$materia) {
+            throw new \Exception('Materia não cadastrada');
+        }
+        return $materia;
+
+        } catch (\Exception) {
+            throw new \Exception('Materia não cadastrada');
+        }
     }
 
     public function getMaterias()
